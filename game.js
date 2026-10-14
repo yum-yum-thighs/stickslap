@@ -12,8 +12,8 @@
   let calm=read('stickslap.web.calm',reducedMotion?'1':'0')==='1';
   const active=()=>state==='playing'||state==='practice';
   const particles=[],rings=[],glows=new Map(),map=globalThis.STICKSLAP_MUSIC_MAP;
-  const music=new Audio('assets/stickslap-loop.wav');music.loop=true;music.volume=.35;music.preload='metadata';
-  let muted=read('stickslap.web.muted','1')==='1',audioContext,effectGain;music.muted=muted;
+  const music=$('music');music.volume=.35;
+  let muted=false,audioContext,effectGain;music.muted=muted;
   const model=new SlapSimulation({left:-4,right:4,bottom:-4,top:4});model.feedback=feedback;
   function resize(){
     const box=arenaElement.getBoundingClientRect();width=box.width;height=box.height;const dpr=Math.min(devicePixelRatio||1,2);
@@ -64,7 +64,7 @@
   $('practice').addEventListener('click',practice);
   $('calm').addEventListener('click',()=>{calm=!calm;save('stickslap.web.calm',calm?'1':'0');shake=0;updateHud();});
   for(let i=0;i<3;i++)$(`ability-${i}`).addEventListener('click',()=>ability(i));
-  $('sound').addEventListener('click',()=>{muted=!muted;music.muted=muted;if(effectGain)effectGain.gain.value=muted?0:1;save('stickslap.web.muted',muted?'1':'0');updateHud();});
+  $('sound').addEventListener('click',()=>{muted=!muted;music.muted=muted;if(effectGain)effectGain.gain.value=muted?0:1;if(!muted&&active())audioUnlock();updateHud();});
   canvas.addEventListener('pointerdown',e=>{if(!active())return;e.preventDefault();const b=canvas.getBoundingClientRect();model.toggleAt((e.clientX-b.left-width/2)/scale,(height/2-e.clientY+b.top)/scale);if(state==='practice'&&!practiceFired)message(model.canCompress?'PRACTICE 2 / 2 — PRESS COMPRESS. DASH TO THE CYAN MARKER.':'PRACTICE 1 / 2 — TAP THE TWO PINK TARGETS',999);canvas.focus({preventScroll:true});updateHud();});
   document.addEventListener('keydown',e=>{if(e.repeat||e.ctrlKey||e.metaKey||e.altKey)return;const k=e.key.toLowerCase();if(k==='escape'||k==='p'){e.preventDefault();pause();}else if(e.code==='Space'||k==='c'){if(e.target instanceof HTMLButtonElement&&e.code==='Space')return;e.preventDefault();if(active())compress();else if(state==='paused')pause();else start();}else if(k==='r'&&state==='finished')start();else if(['1','2','3'].includes(k)){e.preventDefault();ability(Number(k)-1);}});
   document.addEventListener('visibilitychange',()=>{if(document.hidden&&active())pause();});
@@ -79,6 +79,7 @@
     text('slots',`${model.selected.length} / 5 GRABBED`);Array.from($('tentacle-dots').children).forEach((d,i)=>d.classList.toggle('selected',i<model.selected.length));
     $('compress').disabled=!active()||!model.canCompress;text('compress',model.canCompress?'COMPRESS!':`GRAB ${Math.max(0,2-model.selected.length)} MORE`);
     text('sound',muted?'SOUND OFF':'SOUND ON');$('sound').setAttribute('aria-pressed',String(muted));$('sound').setAttribute('aria-label',muted?'Unmute sound':'Mute sound');$('pause').disabled=!active()&&state!=='paused';text('pause',state==='paused'?'▶':'Ⅱ');$('pause').setAttribute('aria-label',state==='paused'?'Resume game':'Pause game');
+    $('sound').title=muted?'Unmute music and effects':music.paused?'Sound enabled — music starts when you play':'Playing Trails of Light';
     text('calm',calm?'CALM ON':'CALM OFF');$('calm').setAttribute('aria-pressed',String(calm));
     text('notice',noticeTime>0?notice:model.canCompress?'CYAN MARKER = YOUR DASH DESTINATION':learned?'GRAB BOMBS FOR CHAIN REACTIONS':'TAP TWO TARGETS, THEN COMPRESS');
   }

@@ -11,11 +11,12 @@
   <meta property="og:title" content="StickSlap — choose your escape">
   <meta property="og:description" content="A playable AI-assisted prototype. Grab targets and dash to their shared centre.">
   <link rel="stylesheet" href="style.css">
-  <script src="assets/music-map.js" defer></script>
+  <script src="assets/music-map.js?v=trails-of-light" defer></script>
   <script src="simulation.js" defer></script>
-  <script src="game.js" defer></script>
+  <script src="game.js?v=sound-on" defer></script>
 </head>
 <body>
+<audio id="music" src="assets/trails-of-light.mp3" loop preload="metadata" hidden></audio>
 <main class="game" aria-label="StickSlap">
   <header class="hud">
     <div class="score-block"><h1>STICK<span>SLAP</span></h1><strong id="score">0</strong><small>SLAPS</small></div>
@@ -33,7 +34,7 @@
     <small class="keyboard">SPACE / C · COMPRESS <span>1 / 2 / 3 · ABILITIES</span> ESC / P · PAUSE</small>
   </footer>
   <section class="overlay" id="overlay" aria-label="Game menu">
-    <div class="menu-card"><span class="eyebrow" id="menu-eyebrow">FIVE TENTACLES. ONE BIG CRUSH.</span><h2 id="menu-title">STICK<br><em>SLAP</em></h2><p class="tagline" id="menu-tagline">GRAB. CRUSH. REPEAT.</p><p id="menu-copy">Tap enemies and bombs to grab them.<br>Tap again to detach. Grab at least two.<br>Compress to dash to the cyan marker.</p><button id="play" class="primary">START A RUN <span>↗︎</span></button><button id="practice" class="secondary">TRY A SAFE PRACTICE</button><small id="menu-note">CHAIN KILLS. CHARGE ABILITIES. SURVIVE THE BEAT.</small><nav class="project-links" aria-label="Project links"><a href="https://github.com/yum-yum-thighs/stickslap">Source &amp; project notes ↗</a><a href="https://yum-yum-thighs.github.io/phase-shift/">Try Phase Shift ↗</a></nav></div>
+    <div class="menu-card"><span class="eyebrow" id="menu-eyebrow">FIVE TENTACLES. ONE BIG CRUSH.</span><h2 id="menu-title">STICK<br><em>SLAP</em></h2><p class="tagline" id="menu-tagline">GRAB. CRUSH. REPEAT.</p><p id="menu-copy">Tap enemies and bombs to grab them.<br>Tap again to detach. Grab at least two.<br>Compress to dash to the cyan marker.</p><button id="play" class="primary">START A RUN <span>↗︎</span></button><button id="practice" class="secondary">TRY A SAFE PRACTICE</button><small id="menu-note">CHAIN KILLS. CHARGE ABILITIES. SURVIVE THE BEAT.</small><nav class="project-links" aria-label="Project links"><a href="https://github.com/yum-yum-thighs/stickslap">Source &amp; project notes ↗</a><a href="https://yum-yum-thighs.github.io/phase-shift/">Try Phase Shift ↗</a><a href="https://disctr4k.bandcamp.com/track/trails-of-light-ft-fusoxide">Music: Trails of Light · disctr4k &amp; fusoxide ↗</a></nav></div>
   </section>
 </main>
 </body>

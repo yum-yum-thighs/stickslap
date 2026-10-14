@@ -21,8 +21,9 @@ to learn the core interaction before entering a real run.
 - At 100% charge: **1** shockwave, **2** protection, **3** slow mode.
 - A health pack appears only at **1 HP**. Pull it into a dash to recover **2 HP**.
 - **Escape / P** pauses; **R** replays after game over.
-- Sound starts off. Enable it to hear the original score. Beat timing continues
-  when muted, so muting does not change difficulty.
+- Sound starts on by default on every page load. The soundtrack begins when you
+  start a run or practice, as browsers require an interaction for audible playback.
+  The sound button mutes music and effects. Beat timing continues when muted.
 - **Calm** reduces pulsing and removes screen shake. First use respects your
   operating system's reduced-motion setting.
 
@@ -48,9 +49,14 @@ simulation.js owns the independent game rules. game.js owns Canvas rendering,
 input, safe practice, sound and interface state. Read [the case study](docs/CASE_STUDY.md)
 for the weighted-center calculation, feedback and code walkthrough.
 
-The score is synthesized by tools/generate-music.cjs. Run npm run music to
-regenerate the WAV and its energy/beat map. No third-party music recordings or
-samples are included in this public release.
+The soundtrack is **trails of light (ft. fusoxide)** by **disctr4k**, restored from
+the creator's local game folder with its matching energy/beat map. See the
+[artist's track page](https://disctr4k.bandcamp.com/track/trails-of-light-ft-fusoxide)
+and [credits](CREDITS.md). Rights to the recording remain with its artists.
+
+The earlier synthesized score remains as an alternative in assets/stickslap-loop.wav.
+Running npm run music regenerates that WAV and assets/generated-music-map.js;
+it does not replace the active soundtrack's beat map.
 
 GitHub Pages serves main from the repository root. .nojekyll keeps the game
 buildless. Runtime asset paths are relative, so it can also be placed inside a

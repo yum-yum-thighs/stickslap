@@ -32,7 +32,7 @@ PASS: Sustained physics stays finite
 PASS: Repeated unprotected contact ends a run
 PASS: Game over freezes simulation
 PASS: Restart clears the previous run
-PASS: Original music map has aligned energy and beat frames
+PASS: Trails of Light map has aligned energy and beat frames
 PASS: Music map contains real bounded energy and accents
 PASS: Original playable WAV score is included locally
-PASS: Temporary third-party music is excluded from the public release
+PASS: Requested Trails of Light MP3 is included locally

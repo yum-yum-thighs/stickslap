@@ -28,5 +28,5 @@ const step=.05,stride=Math.round(step*rate),count=Math.ceil(samples.length/strid
 for(let frame=0;frame<count;frame++){let energy=0;const start=frame*stride,end=Math.min(samples.length,start+stride);for(let i=start;i<end;i++)energy+=samples[i]*samples[i];levels.push(Math.sqrt(energy/(end-start)));}
 const sorted=[...levels].sort((a,b)=>a-b),peak=sorted[Math.floor(sorted.length*.95)];for(let i=0;i<levels.length;i++)levels[i]=Number(Math.min(1,levels[i]/peak).toFixed(5));
 for(let i=0;i<bars*4;i++)beats[Math.floor(i*beat/step)]=true;
-const output=path.resolve(__dirname,'../assets');fs.mkdirSync(output,{recursive:true});fs.writeFileSync(path.join(output,'stickslap-loop.wav'),Buffer.concat([header,pcm]));fs.writeFileSync(path.join(output,'music-map.js'),'globalThis.STICKSLAP_MUSIC_MAP = '+JSON.stringify({step,levels,beats})+';\n');
+const output=path.resolve(__dirname,'../assets');fs.mkdirSync(output,{recursive:true});fs.writeFileSync(path.join(output,'stickslap-loop.wav'),Buffer.concat([header,pcm]));fs.writeFileSync(path.join(output,'generated-music-map.js'),'globalThis.STICKSLAP_MUSIC_MAP = '+JSON.stringify({step,levels,beats})+';\n');
 console.log(`Original loop: ${duration}s, ${bpm} BPM, ${bars} bars, ${beats.filter(Boolean).length} beat accents.`);

@@ -41,9 +41,10 @@ g=fresh();for(let i=0;i<9000&&!g.gameOver;i++){for(const body of g.bodies)if(bod
 check(g.wave>=2&&!g.gameOver,'Automated compression play reaches later waves');check(g.bodies.every(b=>Number.isFinite(b.x)&&Number.isFinite(b.y)),'Sustained physics stays finite');
 g=fresh();attacker=g.spawn('bruiser',.4,0);for(let i=0;i<600&&!g.gameOver;i++){attacker.x=g.player.x+.4;attacker.y=g.player.y;g.tick(.02);}check(g.gameOver,'Repeated unprotected contact ends a run');
 const endedTime=g.elapsed;g.tick(10);check(g.elapsed===endedTime,'Game over freezes simulation');g.reset(area,3);check(g.hearts===5&&g.score===0&&g.charge===0&&g.selected.length===0&&!packs(g).length,'Restart clears the previous run');
-const map=globalThis.STICKSLAP_MUSIC_MAP;check(map.levels.length===map.beats.length&&map.levels.length>1000,'Original music map has aligned energy and beat frames');
+const map=globalThis.STICKSLAP_MUSIC_MAP;check(map.levels.length===map.beats.length&&map.levels.length>1000,'Trails of Light map has aligned energy and beat frames');
 check(map.levels.every(v=>v>=0&&v<=1)&&map.beats.filter(Boolean).length>100,'Music map contains real bounded energy and accents');
 const wav=fs.readFileSync(path.join(__dirname,'assets/stickslap-loop.wav'));
 check(wav.subarray(0,4).toString()==='RIFF'&&wav.subarray(8,12).toString()==='WAVE'&&wav.length>1000000,'Original playable WAV score is included locally');
-check(!fs.readdirSync(path.join(__dirname,'assets')).some(name=>/trails|fusoxide/i.test(name)),'Temporary third-party music is excluded from the public release');
+const mp3=fs.readFileSync(path.join(__dirname,'assets/trails-of-light.mp3'));
+check(mp3.length>1000000&&(mp3.subarray(0,3).toString()==='ID3'||(mp3[0]===255&&(mp3[1]&224)===224)),'Requested Trails of Light MP3 is included locally');
 const output=path.join(__dirname,'verification');fs.mkdirSync(output,{recursive:true});fs.writeFileSync(path.join(output,'gameplay-checks.txt'),checks.join('\n')+'\n');console.log(`${checks.length} gameplay checks passed.`);

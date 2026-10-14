@@ -43,15 +43,18 @@ changes the playable arena bounds and clamps bodies into those bounds.
 The destination is visible before committing. Grab rings, collision particles,
 short tones and contextual notices make state changes readable. A calm-motion
 setting removes screen shake and reduces pulsing; it respects the operating
-system's reduced-motion preference on first use. Sound starts off. Leaving the
+system's reduced-motion preference on first use. Sound starts on. Leaving the
 tab or window pauses the run, and buttons support native keyboard activation.
 
-## Music without a downloaded recording
+## Music and gameplay
 
-`tools/generate-music.cjs` synthesizes a 128 BPM loop from oscillators and seeded
-noise, then calculates a matching energy/beat map. There are no third-party
-recordings or samples in this release. Beat timing continues when muted, so the
-sound setting does not change the gameplay difficulty.
+The game plays the creator-provided **Trails of Light** MP3 and its matching
+energy/beat map. Sound is enabled on every page load and playback starts with
+the run or practice interaction. Beat timing continues when muted, so the sound
+setting does not change the gameplay difficulty. Pause also pauses the music.
+
+`tools/generate-music.cjs` retains the earlier 128 BPM synthesized score as an
+alternative and writes its map separately, leaving the active song's map intact.
 
 ## Validation and tradeoffs
 
