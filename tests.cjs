@@ -45,6 +45,6 @@ const map=globalThis.STICKSLAP_MUSIC_MAP;check(map.levels.length===map.beats.len
 check(map.levels.every(v=>v>=0&&v<=1)&&map.beats.filter(Boolean).length>100,'Music map contains real bounded energy and accents');
 const wav=fs.readFileSync(path.join(__dirname,'assets/stickslap-loop.wav'));
 check(wav.subarray(0,4).toString()==='RIFF'&&wav.subarray(8,12).toString()==='WAVE'&&wav.length>1000000,'Original playable WAV score is included locally');
-const mp3=fs.readFileSync(path.join(__dirname,'assets/trails-of-light.mp3'));
-check(mp3.length>1000000&&(mp3.subarray(0,3).toString()==='ID3'||(mp3[0]===255&&(mp3[1]&224)===224)),'Requested Trails of Light MP3 is included locally');
+const mp3=fs.readFileSync(path.join(__dirname,'assets/trails-of-light-128.mp3'));
+check(mp3.length>1000000&&mp3.length<3000000&&(mp3.subarray(0,3).toString()==='ID3'||(mp3[0]===255&&(mp3[1]&224)===224)),'Compact Trails of Light playback MP3 is included locally');
 const output=path.join(__dirname,'verification');fs.mkdirSync(output,{recursive:true});fs.writeFileSync(path.join(output,'gameplay-checks.txt'),checks.join('\n')+'\n');console.log(`${checks.length} gameplay checks passed.`);

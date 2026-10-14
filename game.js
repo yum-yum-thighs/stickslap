@@ -12,7 +12,7 @@
   let calm=read('stickslap.web.calm',reducedMotion?'1':'0')==='1';
   const active=()=>state==='playing'||state==='practice';
   const particles=[],rings=[],glows=new Map(),map=globalThis.STICKSLAP_MUSIC_MAP;
-  const music=$('music');music.volume=.35;
+  const music=new SlapSoundtrack($('music'));music.volume=.35;
   let muted=false,audioContext,effectGain;music.muted=muted;
   const model=new SlapSimulation({left:-4,right:4,bottom:-4,top:4});model.feedback=feedback;
   function resize(){
@@ -25,7 +25,7 @@
   const point=(x,y)=>({x:width/2+x*scale,y:height/2-y*scale});
   function audioUnlock(){
     try{if(!audioContext){audioContext=new (window.AudioContext||window.webkitAudioContext)();effectGain=audioContext.createGain();effectGain.gain.value=muted?0:1;effectGain.connect(audioContext.destination);}audioContext.resume().catch(()=>{});}catch{/* Game remains playable if audio is unavailable. */}
-    music.play().catch(()=>message('MUSIC UNAVAILABLE — YOU CAN STILL SLAP',3));
+    music.play(audioContext).catch(()=>message('MUSIC UNAVAILABLE — YOU CAN STILL SLAP',3));
   }
   function tone(type){
     if(muted||!audioContext||audioContext.state!=='running')return;
@@ -79,7 +79,7 @@
     text('slots',`${model.selected.length} / 5 GRABBED`);Array.from($('tentacle-dots').children).forEach((d,i)=>d.classList.toggle('selected',i<model.selected.length));
     $('compress').disabled=!active()||!model.canCompress;text('compress',model.canCompress?'COMPRESS!':`GRAB ${Math.max(0,2-model.selected.length)} MORE`);
     text('sound',muted?'SOUND OFF':'SOUND ON');$('sound').setAttribute('aria-pressed',String(muted));$('sound').setAttribute('aria-label',muted?'Unmute sound':'Mute sound');$('pause').disabled=!active()&&state!=='paused';text('pause',state==='paused'?'▶':'Ⅱ');$('pause').setAttribute('aria-label',state==='paused'?'Resume game':'Pause game');
-    $('sound').title=muted?'Unmute music and effects':music.paused?'Sound enabled — music starts when you play':'Playing Trails of Light';
+    $('sound').title=muted?'Unmute music and effects':music.loading?'Loading Trails of Light — starts when ready':music.paused?'Sound enabled — music starts when you play':'Playing Trails of Light';
     text('calm',calm?'CALM ON':'CALM OFF');$('calm').setAttribute('aria-pressed',String(calm));
     text('notice',noticeTime>0?notice:model.canCompress?'CYAN MARKER = YOUR DASH DESTINATION':learned?'GRAB BOMBS FOR CHAIN REACTIONS':'TAP TWO TARGETS, THEN COMPRESS');
   }

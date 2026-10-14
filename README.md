@@ -23,6 +23,8 @@ to learn the core interaction before entering a real run.
 - **Escape / P** pauses; **R** replays after game over.
 - Sound starts on by default on every page load. The soundtrack begins when you
   start a run or practice, as browsers require an interaction for audible playback.
+  A compact playback copy is fully downloaded and decoded before the music starts,
+  then loops from memory to avoid streaming interruptions during a run.
   The sound button mutes music and effects. Beat timing continues when muted.
 - **Calm** reduces pulsing and removes screen shake. First use respects your
   operating system's reduced-motion setting.

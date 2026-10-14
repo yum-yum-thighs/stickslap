@@ -5,8 +5,8 @@
   "description": "AI-assisted tentacle survival prototype with compression movement",
   "scripts": {
     "start": "node server.js",
-    "test": "node tests.cjs",
-    "check": "node --check game.js && node --check simulation.js",
+    "test": "node tests.cjs && node tests-audio.cjs",
+    "check": "node --check game.js && node --check simulation.js && node --check soundtrack.js",
     "music": "node tools/generate-music.cjs"
   },
   "engines": {"node": ">=20"}
