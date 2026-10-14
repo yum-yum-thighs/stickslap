@@ -1,0 +1,13 @@
+{
+  "name": "stickslap",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI-assisted tentacle survival prototype with compression movement",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node tests.cjs",
+    "check": "node --check game.js && node --check simulation.js",
+    "music": "node tools/generate-music.cjs"
+  },
+  "engines": {"node": ">=20"}
+}

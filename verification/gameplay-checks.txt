@@ -1,0 +1,38 @@
+PASS: Compression requires two targets
+PASS: One target cannot display a destination
+PASS: Equal targets converge at their midpoint
+PASS: Compression releases grabbed targets
+PASS: Compression kills targets through actual collision
+PASS: Compression dash is briefly invulnerable
+PASS: Destination accounts for heavier bombs
+PASS: Tap again detaches and hides destination
+PASS: Actual dash commits the displayed destination
+PASS: Five tentacles is the maximum
+PASS: Detaching frees a tentacle
+PASS: Bomb chains detonate and score exactly once
+PASS: Uncharged abilities cannot fire
+PASS: Kill chains fill ability charge
+PASS: Combo expiry keeps banked charge
+PASS: Invalid ability cannot spend charge
+PASS: Shockwave spends charge and has a bounded radius
+PASS: Protection blocks sustained contact
+PASS: Normal damage resumes when protection expires
+PASS: Slow mode reduces enemy movement
+PASS: Slow duration uses real gameplay time
+PASS: Health pack appears only at 1 HP
+PASS: Health packs cannot duplicate
+PASS: Bomb explosions do not destroy health packs
+PASS: Pulling a health pack into a dash heals two points
+PASS: Music energy increases spawning
+PASS: Beat spawning respects its cooldown
+PASS: No automatic player movement replaces compression
+PASS: Resize keeps targets inside the arena
+PASS: Automated compression play reaches later waves
+PASS: Sustained physics stays finite
+PASS: Repeated unprotected contact ends a run
+PASS: Game over freezes simulation
+PASS: Restart clears the previous run
+PASS: Original music map has aligned energy and beat frames
+PASS: Music map contains real bounded energy and accents
+PASS: Original playable WAV score is included locally
+PASS: Temporary third-party music is excluded from the public release

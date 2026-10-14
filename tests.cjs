@@ -1,0 +1,49 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+require('./simulation.js');require('./assets/music-map.js');
+const S=globalThis.SlapSimulation,area={left:-6,right:6,bottom:-6,top:6},checks=[];
+const check=(condition,label)=>{assert.ok(condition,label);checks.push('PASS: '+label);};
+const fresh=()=>new S(area,41),advance=(g,seconds)=>{const n=Math.ceil(seconds*240);for(let i=0;i<n;i++)g.tick(seconds/n);};
+const charge=g=>{for(let i=0;i<6;i++){g.spawn('chaser',5,0);g.explode(g.spawn('bomb',5,.5));}};
+const packs=g=>g.bodies.filter(b=>b.kind==='health'&&!b.dead);
+let g=fresh();check(!g.compress(),'Compression requires two targets');
+g.toggle(g.bodies[1]);check(!g.compressionCenter(),'One target cannot display a destination');
+g.toggle(g.bodies[2]);check(g.compressionCenter().x===0,'Equal targets converge at their midpoint');
+check(g.compress()&&g.selected.length===0,'Compression releases grabbed targets');advance(g,.5);
+check(g.score>=2,'Compression kills targets through actual collision');check(g.hearts===5,'Compression dash is briefly invulnerable');
+g=fresh();g.bodies.splice(1);const light=g.spawn('chaser',-2,2),heavy=g.spawn('bomb',2,2);g.toggleAt(light.x,light.y);g.toggleAt(heavy.x,heavy.y);
+check(Math.abs(g.compressionCenter().x-2/3)<.00001,'Destination accounts for heavier bombs');
+g.toggleAt(heavy.x,heavy.y);check(!heavy.selected&&g.selected.length===1&&!g.compressionCenter(),'Tap again detaches and hides destination');g.toggleAt(heavy.x,heavy.y);
+const aim=g.compressionCenter();g.compress();check(g.dashTarget.x===aim.x&&g.dashTarget.y===aim.y,'Actual dash commits the displayed destination');
+g=fresh();g.bodies.splice(1);for(let i=0;i<6;i++)g.spawn('chaser',-3+i,3);for(let i=1;i<=5;i++)g.toggle(g.bodies[i]);
+check(!g.toggle(g.bodies[6])&&g.selected.length===5,'Five tentacles is the maximum');g.toggle(g.bodies[1]);check(g.toggle(g.bodies[6]),'Detaching frees a tentacle');
+g=fresh();g.bodies.splice(1);const a=g.spawn('bomb',0,2),b=g.spawn('bomb',1.8,2);g.spawn('chaser',3,2);let explosions=0;g.feedback=e=>{if(e.type==='explosion')explosions++;};g.explode(a);g.explode(a);advance(g,.01);
+check(explosions===2&&g.score===1,'Bomb chains detonate and score exactly once');
+g=fresh();check(!g.ability(0),'Uncharged abilities cannot fire');charge(g);
+check(g.comboCount===6&&g.charge===100,'Kill chains fill ability charge');advance(g,3.1);check(g.comboCount===0&&g.charge===100,'Combo expiry keeps banked charge');
+check(!g.ability(99)&&g.charge===100,'Invalid ability cannot spend charge');const near=g.spawn('chaser',g.player.x+1,g.player.y),far=g.spawn('chaser',-5.5,-5);
+check(g.ability(0)&&near.dead&&!far.dead&&g.charge<100,'Shockwave spends charge and has a bounded radius');
+g=fresh();charge(g);g.ability(1);let attacker=g.spawn('bruiser',.4,0);for(let i=0;i<220;i++){attacker.x=g.player.x+.4;attacker.y=g.player.y;g.tick(.02);}
+check(g.hearts===5&&g.protection>0,'Protection blocks sustained contact');for(let i=0;i<50;i++){attacker.x=g.player.x+.4;attacker.y=g.player.y;g.tick(.02);}
+check(g.protection===0&&g.hearts<5,'Normal damage resumes when protection expires');
+const regular=fresh(),slow=fresh();charge(regular);charge(slow);const start={...slow.bodies[1]};slow.ability(2);advance(regular,1);advance(slow,1);
+check(Math.hypot(slow.bodies[1].x-start.x,slow.bodies[1].y-start.y)<Math.hypot(regular.bodies[1].x-start.x,regular.bodies[1].y-start.y)*.6,'Slow mode reduces enemy movement');
+check(slow.slow>4.9,'Slow duration uses real gameplay time');
+g=fresh();attacker=g.spawn('bruiser',.4,0);let premature=false;for(let i=0;i<400&&g.hearts>1;i++){attacker.x=g.player.x+.4;attacker.y=g.player.y;g.tick(.02);if(g.hearts>1&&packs(g).length)premature=true;}
+check(!premature&&g.hearts===1&&packs(g).length===1,'Health pack appears only at 1 HP');advance(g,.1);check(packs(g).length===1,'Health packs cannot duplicate');
+const pack=packs(g)[0];g.explode(g.spawn('bomb',pack.x,pack.y));check(!pack.dead,'Bomb explosions do not destroy health packs');
+const target=g.spawn('chaser',pack.x,pack.y+.45);g.toggle(pack);g.toggle(target);g.compress();advance(g,.6);
+check(g.hearts===3&&packs(g).length===0,'Pulling a health pack into a dash heals two points');
+const quiet=fresh(),loud=fresh();for(const sim of [quiet,loud]){sim.toggle(sim.bodies[1]);sim.toggle(sim.bodies[2]);}quiet.music(0,false);loud.music(1,false);advance(quiet,3.5);advance(loud,3.5);
+check(loud.enemyCount()>quiet.enemyCount(),'Music energy increases spawning');const beats=fresh();for(let i=0;i<120;i++){beats.music(1,true);beats.tick(1/60);}check(beats.enemyCount()>2&&beats.enemyCount()<=8,'Beat spawning respects its cooldown');
+g=fresh();const untouched={...g.player};advance(g,.7);check(Math.hypot(g.player.x-untouched.x,g.player.y-untouched.y)<.001,'No automatic player movement replaces compression');
+g=fresh();g.toggle(g.bodies[1]);g.setArena({left:-2,right:2,bottom:-2,top:2});check(g.bodies.every(b=>b.x>=-2&&b.x<=2&&b.y>=-2&&b.y<=2),'Resize keeps targets inside the arena');
+g=fresh();for(let i=0;i<9000&&!g.gameOver;i++){for(const body of g.bodies)if(body!==g.player&&!body.selected&&g.selected.length<5)g.toggle(body);if(g.canCompress)g.compress();g.tick(1/240);}
+check(g.wave>=2&&!g.gameOver,'Automated compression play reaches later waves');check(g.bodies.every(b=>Number.isFinite(b.x)&&Number.isFinite(b.y)),'Sustained physics stays finite');
+g=fresh();attacker=g.spawn('bruiser',.4,0);for(let i=0;i<600&&!g.gameOver;i++){attacker.x=g.player.x+.4;attacker.y=g.player.y;g.tick(.02);}check(g.gameOver,'Repeated unprotected contact ends a run');
+const endedTime=g.elapsed;g.tick(10);check(g.elapsed===endedTime,'Game over freezes simulation');g.reset(area,3);check(g.hearts===5&&g.score===0&&g.charge===0&&g.selected.length===0&&!packs(g).length,'Restart clears the previous run');
+const map=globalThis.STICKSLAP_MUSIC_MAP;check(map.levels.length===map.beats.length&&map.levels.length>1000,'Original music map has aligned energy and beat frames');
+check(map.levels.every(v=>v>=0&&v<=1)&&map.beats.filter(Boolean).length>100,'Music map contains real bounded energy and accents');
+const wav=fs.readFileSync(path.join(__dirname,'assets/stickslap-loop.wav'));
+check(wav.subarray(0,4).toString()==='RIFF'&&wav.subarray(8,12).toString()==='WAVE'&&wav.length>1000000,'Original playable WAV score is included locally');
+check(!fs.readdirSync(path.join(__dirname,'assets')).some(name=>/trails|fusoxide/i.test(name)),'Temporary third-party music is excluded from the public release');
+const output=path.join(__dirname,'verification');fs.mkdirSync(output,{recursive:true});fs.writeFileSync(path.join(output,'gameplay-checks.txt'),checks.join('\n')+'\n');console.log(`${checks.length} gameplay checks passed.`);

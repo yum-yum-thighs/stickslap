@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1222">
+  <meta name="description" content="Grab the crowd. Choose your escape. A music-reactive tentacle survival game.">
+  <title>StickSlap — Grab. Crush. Repeat.</title>
+  <meta property="og:image" content="https://yum-yum-thighs.github.io/stickslap/verification/browser-desktop.png">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="StickSlap — choose your escape">
+  <meta property="og:description" content="A playable AI-assisted prototype. Grab targets and dash to their shared centre.">
+  <link rel="stylesheet" href="style.css">
+  <script src="assets/music-map.js" defer></script>
+  <script src="simulation.js" defer></script>
+  <script src="game.js" defer></script>
+</head>
+<body>
+<main class="game" aria-label="StickSlap">
+  <header class="hud">
+    <div class="score-block"><h1>STICK<span>SLAP</span></h1><strong id="score">0</strong><small>SLAPS</small></div>
+    <div class="combo-block"><span id="combo">CHAIN KILLS</span><div class="meter combo-meter" aria-label="Combo time"><i id="combo-fill"></i></div><small id="wave">WAVE 01</small></div>
+    <div class="status-block"><div class="utilities"><button id="sound" aria-label="Mute sound" aria-pressed="false">SOUND ON</button><button id="calm" aria-label="Reduce motion and screen shake" aria-pressed="false">CALM OFF</button><button id="pause" aria-label="Pause game" disabled>Ⅱ</button></div><strong id="best">BEST 0</strong><div id="hearts" aria-label="5 health points"></div></div>
+  </header>
+  <div class="arena" id="arena"><canvas id="canvas" tabindex="0" aria-label="Tap enemies and bombs to attach tentacles. Tap a grabbed target again to detach. Compress to dash to the cyan marker."></canvas></div>
+  <footer class="controls">
+    <p id="notice" role="status">TAP TWO TARGETS, THEN COMPRESS</p>
+    <div class="charge-caption"><span id="charge-label">ABILITY CHARGE</span><b id="charge-value">0%</b></div>
+    <div class="meter charge-meter" id="charge-meter" role="progressbar" aria-label="Ability charge" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="charge-fill"></i></div>
+    <div class="abilities"><button id="ability-0" disabled><kbd>1</kbd><span>SHOCKWAVE</span></button><button id="ability-1" disabled><kbd>2</kbd><span>PROTECTION</span></button><button id="ability-2" disabled><kbd>3</kbd><span>SLOW MODE</span></button></div>
+    <div class="grabs"><span id="slots">0 / 5 GRABBED</span><div id="tentacle-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div></div>
+    <button id="compress" class="primary" disabled>GRAB 2 MORE</button>
+    <small class="keyboard">SPACE / C · COMPRESS <span>1 / 2 / 3 · ABILITIES</span> ESC / P · PAUSE</small>
+  </footer>
+  <section class="overlay" id="overlay" aria-label="Game menu">
+    <div class="menu-card"><span class="eyebrow" id="menu-eyebrow">FIVE TENTACLES. ONE BIG CRUSH.</span><h2 id="menu-title">STICK<br><em>SLAP</em></h2><p class="tagline" id="menu-tagline">GRAB. CRUSH. REPEAT.</p><p id="menu-copy">Tap enemies and bombs to grab them.<br>Tap again to detach. Grab at least two.<br>Compress to dash to the cyan marker.</p><button id="play" class="primary">START A RUN <span>↗︎</span></button><button id="practice" class="secondary">TRY A SAFE PRACTICE</button><small id="menu-note">CHAIN KILLS. CHARGE ABILITIES. SURVIVE THE BEAT.</small><nav class="project-links" aria-label="Project links"><a href="https://github.com/yum-yum-thighs/stickslap">Source &amp; project notes ↗</a><a href="https://yum-yum-thighs.github.io/phase-shift/">Try Phase Shift ↗</a></nav></div>
+  </section>
+</main>
+</body>
+</html>
